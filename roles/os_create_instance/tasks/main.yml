@@ -1,19 +1,19 @@
 ---
 
 - name: Create keypair with public key
-    os_keypair:
-        state: present
-        name: keypair-jmgarcia
-        public_key_file: keypair-jmgarcia.pub
+  os_keypair:
+      state: present
+      name: keypair-jmgarcia
+      public_key_file: keypair-jmgarcia.pub
 
 - name: Create instance into OpenStack Asgard
-    os_server:
-        state: present
-        name: jmgarcia-instance
-        image: c60877a1-e7cb-48ad-97b3-143a8e87e808
-        key_name: keypair-jmgarcia
-        timeout: 300
-        flavor: d1.medium
-        network: 40128f87-4009-4599-a0b6-cdf237842c43
-        meta:
-            hostname: pichi
+  os_server:
+      state: present
+      name: jmgarcia-instance
+      image: c60877a1-e7cb-48ad-97b3-143a8e87e808
+      key_name: keypair-jmgarcia
+      timeout: 300
+      flavor: d1.medium
+      network: 40128f87-4009-4599-a0b6-cdf237842c43
+      meta:
+          hostname: pichi
