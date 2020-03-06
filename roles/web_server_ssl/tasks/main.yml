@@ -1,0 +1,7 @@
+---
+
+- name: "install webserver packages"
+  yum:
+    name: "{{ webserver_package }}"
+    state: present
+    update_cache: true

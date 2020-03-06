@@ -1,0 +1,6 @@
+---
+- hosts: 172.16.49.65
+  become: yes
+  become_user: root
+  roles:
+    - web_server_ssl
