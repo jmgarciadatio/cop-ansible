@@ -1,7 +1,16 @@
 ---
 
-- name: "install webserver packages"
+- name: Copy nginx repo to /etc/yum.repos.d
+  copy: 
+    src: nginx.repo
+    dest: /etc/yum.repos.d/nginx.repo
+    owner: root
+    group: root
+    mode: 0644
+    # backup: yes
+
+- name: Install nginx package
   yum:
-    name: "{{ webserver_package }}"
-    state: present
+    name: nginx
+    state: latest
     update_cache: true
