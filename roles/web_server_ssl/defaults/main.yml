@@ -1,3 +1,3 @@
 ---
 
-webserver_package: httpd
+web_domain: jmcop.ansible
