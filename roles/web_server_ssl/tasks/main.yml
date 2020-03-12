@@ -17,14 +17,14 @@
 
 - name: Start and enable nginx service
   service:
-    name: httpd
+    name: nginx
     state: started
     enabled: yes
 
 - name: Create document root directory
   file:
     state: directory
-    path: /var/www/cop-ansible
+    path: /var/www/jmcop.ansible
     owner: root
     group: root
     mode: 0755
@@ -32,18 +32,11 @@
 - name: Copy index.html into document root directory
   copy: 
     src: index.html
-    dest: /var/www/cop-ansible
+    dest: /var/www/jmcop.ansible
     owner: root
     group: root
     mode: 0644
     # backup: yes
-
-- name: Add dns entry into /etc/hosts file
-  lineinfile:
-    path: /etc/hosts
-    regexp: '{{ web_domain }}'
-    line: '{{ ansible_host }}    jmcop.ansible'
-    backup: yes
 
 - name: Copy site config
   copy: 

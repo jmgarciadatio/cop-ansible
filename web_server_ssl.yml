@@ -1,5 +1,5 @@
 ---
-- hosts: 172.16.49.65
+- hosts: all
   become: yes
   become_user: root
   roles:
