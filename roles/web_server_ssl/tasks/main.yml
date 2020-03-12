@@ -14,3 +14,9 @@
     name: nginx
     state: latest
     update_cache: true
+
+- name: Start and enable nginx service
+  service:
+    name: httpd
+    state: started
+    enabled: yes
