@@ -1,0 +1,100 @@
+---
+
+- name: Create private keys folder because doesn't exist in RedHat
+  file:
+    state: directory
+    path: "{{ ssl_private_keys_path }}"
+    owner: root
+    group: root
+    mode: 0700
+
+- name: Copy bundle crt into system ssl certs directory
+  copy: 
+    src: ca-cop/ca.bundle
+    dest: "{{ ssl_certs_path }}"
+    owner: root
+    group: root
+    mode: 0644
+    # backup: yes
+
+- name: Copy CA crt. Necessary for sign our server certificate
+  copy: 
+    src: ca-cop/ca.crt
+    dest: "{{ ca_certs_path }}"
+    owner: root
+    group: root
+    mode: 0644
+    # backup: yes
+    
+    
+- name: Copy CA key. Necessary for sign our server certificate
+  copy: 
+    src: ca-cop/ca.key
+    dest: "{{ ca_private_keys_path }}"
+    owner: root
+    group: root
+    mode: 0600
+    # backup: yes
+
+- name: Copy epel rpm. Necessary for install epel repository
+  copy: 
+    src: epel-release-latest-7.noarch.rpm
+    dest: /tmp
+    owner: root
+    group: root
+    mode: 0644
+    # backup: yes
+
+- name: Install epel rpm from a local file. Necessary for install python PIP
+  yum:
+    name: /tmp/epel-release-latest-7.noarch.rpm
+    state: present
+
+- name: Install python PIP. Necessary for install python modules easily
+  yum:
+    name: python-pip
+    state: latest
+    update_cache: true
+
+- name: Install pyOpenSSL in order to use openssl_privatekey ansible module
+  pip:
+    name: pyOpenSSL==19.1.0
+
+- name: Generate an OpenSSL private key with the default values (4096 bits, RSA)
+  openssl_privatekey:
+    path: "{{ ssl_private_keys_path }}/{{ web_domain }}.key"
+
+- name: Generate Certificate Signing Request
+  openssl_csr:
+    path: "{{ ssl_certs_path }}/{{ web_domain }}.csr"
+    privatekey_path: "{{ ssl_private_keys_path }}/{{ web_domain }}.key"
+    common_name: "{{ web_domain }}"
+
+- name: Generate an OpenSSL certificate signed with your own CA certificate
+  openssl_certificate:
+    path: "{{ ssl_certs_path }}/{{ web_domain }}.crt"
+    csr_path: "{{ ssl_certs_path }}/{{ web_domain }}.csr"
+    ownca_path: "{{ ca_certs_path }}/ca.crt"
+    ownca_privatekey_path: "{{ ca_private_keys_path }}/ca.key"
+    provider: ownca
+
+- name: Compose certificate chain with CA root and intermediate CA certs
+  shell: cat {{ ssl_certs_path }}/{{ web_domain }}.crt {{ ssl_certs_path }}/ca.bundle > {{ ssl_certs_path }}/{{ web_domain }}-bundle.crt
+
+- name: Remove CA cert and CA key for security purposes.
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ ca_private_keys_path }}/ca.key"
+    - "{{ ca_certs_path }}/ca.crt"
+
+- name: Copy SSL site config
+  template:
+    src: "{{ web_domain }}.ssl.conf.j2"
+    dest: "/etc/nginx/conf.d/{{ web_domain }}.conf"
+
+- name: Restart nginx
+  service:
+    name: nginx
+    state: restarted

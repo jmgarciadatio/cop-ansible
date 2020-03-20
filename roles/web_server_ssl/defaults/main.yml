@@ -1,3 +1,11 @@
 ---
 
+# Virtual host vars
 web_domain: jmcop.ansible
+web_root_path: "/var/www/{{ web_domain }}"
+
+# Certificate vars
+ssl_certs_path: "/etc/ssl/certs"
+ssl_private_keys_path: "/etc/ssl/private"
+ca_certs_path: "/etc/pki/CA/certs"
+ca_private_keys_path: "/etc/pki/CA/private"

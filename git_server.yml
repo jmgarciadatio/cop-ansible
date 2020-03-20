@@ -1,6 +1,10 @@
 ---
+
 - hosts: all
   become: yes
   become_user: root
   roles:
     - web_server_ssl
+    # - database
+    # - repository
+    # - backup

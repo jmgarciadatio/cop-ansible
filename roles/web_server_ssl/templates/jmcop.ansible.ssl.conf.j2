@@ -1,0 +1,33 @@
+
+server {
+
+listen 80;
+
+server_name {{ web_domain }};
+
+# redirection http to https
+return 301 https://$host$request_uri;
+
+}
+
+
+
+server {
+
+listen 443;
+ssl on;
+
+server_name {{ web_domain }};
+
+ssl_certificate {{ ssl_certs_path }}/{{ web_domain }}-bundle.crt;
+ssl_certificate_key {{ ssl_private_keys_path }}/{{ web_domain }}.key;
+
+#access_log /var/log/nginx/nginx.vhost.access.log;
+#error_log /var/log/nginx/nginx.vhost.error.log;
+
+location / {
+    root {{ web_root_path }};
+    index index.html;
+    }
+
+}

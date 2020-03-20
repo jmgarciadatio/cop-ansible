@@ -1,0 +1,32 @@
+---
+
+- name: Create document root directory
+  file:
+    state: directory
+    path: "/var/www/{{ web_domain }}"
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Copy index.html into document root directory
+  copy: 
+    src: index.html
+    dest: "/var/www/{{ web_domain }}"
+    owner: root
+    group: root
+    mode: 0644
+    # backup: yes
+
+- name: Copy site config
+  copy: 
+    src: jmcop.ansible.conf
+    dest: /etc/nginx/conf.d
+    owner: root
+    group: root
+    mode: 0644
+    # backup: yes
+
+- name: Restart nginx
+  service:
+    name: nginx
+    state: restarted

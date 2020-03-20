@@ -1,0 +1,22 @@
+---
+
+- name: Copy nginx repo to /etc/yum.repos.d
+  copy: 
+    src: nginx.repo
+    dest: /etc/yum.repos.d/nginx.repo
+    owner: root
+    group: root
+    mode: 0644
+    # backup: yes
+
+- name: Install nginx package
+  yum:
+    name: nginx
+    state: latest
+    update_cache: true
+
+- name: Start and enable nginx service
+  service:
+    name: nginx
+    state: started
+    enabled: yes

@@ -1,53 +1,19 @@
 ---
 
-- name: Copy nginx repo to /etc/yum.repos.d
-  copy: 
-    src: nginx.repo
-    dest: /etc/yum.repos.d/nginx.repo
-    owner: root
-    group: root
-    mode: 0644
-    # backup: yes
+# Only install nginx
+- import_tasks: nginx.yml
+  tags:
+    - nginx_ssl
+    - nginx
 
-- name: Install nginx package
-  yum:
-    name: nginx
-    state: latest
-    update_cache: true
+# Configure nginx with the virtual host, create document root folder and copy index.html
+- import_tasks: nginx_vhost.yml
+  tags:
+    - nginx_ssl
+    - nginx_vhost
 
-- name: Start and enable nginx service
-  service:
-    name: nginx
-    state: started
-    enabled: yes
-
-- name: Create document root directory
-  file:
-    state: directory
-    path: /var/www/jmcop.ansible
-    owner: root
-    group: root
-    mode: 0755
-
-- name: Copy index.html into document root directory
-  copy: 
-    src: index.html
-    dest: /var/www/jmcop.ansible
-    owner: root
-    group: root
-    mode: 0644
-    # backup: yes
-
-- name: Copy site config
-  copy: 
-    src: jmcop.ansible.conf
-    dest: /etc/nginx/conf.d
-    owner: root
-    group: root
-    mode: 0644
-    # backup: yes
-
-- name: Restart nginx
-  service:
-    name: nginx
-    state: restarted
+# Generate certificate signed with our Datio own CA and configure the virtual host with SSL
+- import_tasks: ssl.yml
+  tags:
+    - nginx_ssl
+    - ssl
