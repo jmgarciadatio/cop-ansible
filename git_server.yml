@@ -1,5 +1,24 @@
 ---
 
+- hosts: localhost
+#  become: yes
+#  become_user: root
+  
+  tasks:
+    - name: Get openstack instances info
+      os_server_info:
+      register: os_server_info_response
+      tags:
+        - generate_inventory
+
+    - name: Save os_server_info module response into a file
+      local_action:
+        module: copy
+        content: "{{ os_server_info_response }}"
+        dest: /home/jmgarcia/Desktop/os_server_info_response.json
+      tags:
+        - generate_inventory
+
 - hosts: all
   become: yes
   become_user: root
