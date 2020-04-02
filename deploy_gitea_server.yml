@@ -1,27 +1,33 @@
 ---
 
+# Play #1: Create instance in OpenStack.
 - hosts: localhost
-#  become: yes
-#  become_user: root
-  
+  tags: 
+    - create_instance
+  roles:
+    - os_create_instance
+
+# Play #2: Generate inventory dynamically with OpenStack instance list.
+- hosts: localhost
+  tags:
+    - generate_inventory
   tasks:
     - name: Get openstack instances info
       os_server_info:
       register: os_server_info_response
-      tags:
-        - generate_inventory
 
     - name: Save os_server_info module response into a file
       local_action:
         module: copy
         content: "{{ os_server_info_response }}"
         dest: /home/jmgarcia/Desktop/os_server_info_response.json
-      tags:
-        - generate_inventory
 
+# Play #3: Install Gitea repository application in the server.
 - hosts: all
   become: yes
   become_user: root
+  tags:
+    - gitea_server
   roles:
     - web_server_ssl
     # - database
