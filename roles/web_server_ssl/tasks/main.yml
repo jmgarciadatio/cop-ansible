@@ -3,17 +3,17 @@
 # Only install nginx
 - import_tasks: nginx.yml
   tags:
-    - nginx_ssl
+    - web_server_ssl
     - nginx
 
 # Configure nginx with the virtual host, create document root folder and copy index.html
 - import_tasks: nginx_vhost.yml
   tags:
-    - nginx_ssl
+    - web_server_ssl
     - nginx_vhost
 
 # Generate certificate signed with our Datio own CA and configure the virtual host with SSL
 - import_tasks: ssl.yml
   tags:
-    - nginx_ssl
+    - web_server_ssl
     - ssl

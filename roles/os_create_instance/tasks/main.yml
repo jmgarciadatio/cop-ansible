@@ -2,18 +2,18 @@
 
 - name: Create keypair in OpenStack with my public key
   os_keypair:
-      state: present
-      name: keypair-jmgarcia
-      public_key_file: "{{ role_path }}/files/keypair-jmgarcia.pub"
+    state: present
+    name: "{{ os_keypair_name }}"
+    public_key_file: "{{ role_path }}/files/{{ pub_key_filename}}"
 
 - name: Create instance into OpenStack Asgard
   os_server:
-      state: present
-      name: jmgarcia-instance
-      image: c60877a1-e7cb-48ad-97b3-143a8e87e808
-      key_name: keypair-jmgarcia
-      timeout: 300
-      flavor: d1.medium
-      network: 40128f87-4009-4599-a0b6-cdf237842c43
-      meta:
-          hostname: jmgarcia-web
+    state: present
+    name: "{{ instance_name }}"
+    image: "{{ instance_image_id }}"
+    key_name: "{{ os_keypair_name }}"
+    timeout: 300
+    flavor: "{{ instance_flavor }}"
+    network: "{{ instance_network_id }}"
+    meta:
+      hostname: "{{ instance_hostname }}"

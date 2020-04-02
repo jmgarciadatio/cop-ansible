@@ -1,1 +1,10 @@
 ---
+
+instance_name: jmgarcia-instance
+instance_image_id: c60877a1-e7cb-48ad-97b3-143a8e87e808
+instance_flavor: d1.medium
+instance_network_id: 40128f87-4009-4599-a0b6-cdf237842c43
+instance_hostname: jmgarcia-web
+
+os_keypair_name: keypair-jmgarcia
+pub_key_filename: keypair-jmgarcia.pub

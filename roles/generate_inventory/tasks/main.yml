@@ -1,0 +1,31 @@
+---
+
+- name: Import instance vars info
+  include_vars:
+    file: "roles/os_create_instance/defaults/main.yml"
+
+- name: Get openstack instances info
+  os_server_info:
+  register: os_server_info_response
+
+# Module commented. Uses in case of you want to watch json response file.
+# - name: Save os_server_info module response into a file
+#   copy:
+#     content: "{{ os_server_info_response }}"
+#     dest: /home/jmgarcia/Desktop/os_server_info_response.json
+
+- name: "Get floating/public OpenStack instance IP"
+  set_fact:
+    instance_public_ip: "{{ item.public_v4 }}"
+  when: item.name == instance_name
+  loop: "{{ os_server_info_response.openstack_servers }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Generate inventory file with the host
+  template:
+    src: os_inventory.j2
+    dest: "inventory/hosts"
+
+- name: Refresh inventory
+  meta: refresh_inventory
