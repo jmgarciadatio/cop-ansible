@@ -1,0 +1,24 @@
+---
+
+- name: Copy MariaDB 10.4 Red Hat repo to /etc/yum.repos.d
+  copy: 
+    src: mariadb.repo
+    dest: /etc/yum.repos.d/mariadb.repo
+    owner: root
+    group: root
+    mode: 0644
+    # backup: yes
+
+- name: Install MariaDB packages
+  yum:
+    name:
+      - MariaDB-server
+      - MariaDB-client
+    state: latest
+    update_cache: true
+
+- name: Start and enable MariaDB service
+  service:
+    name: mariadb
+    state: started
+    enabled: yes

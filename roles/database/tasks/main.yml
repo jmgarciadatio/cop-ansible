@@ -1,0 +1,8 @@
+---
+
+# Only install MariaDB
+- import_tasks: mariadb.yml
+  tags:
+    - database
+    - mariadb
+

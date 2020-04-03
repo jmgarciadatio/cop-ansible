@@ -37,6 +37,6 @@
     - gitea_server
   roles:
     - web_server_ssl
-    # - database
+    - database
     # - repository
     # - backup
