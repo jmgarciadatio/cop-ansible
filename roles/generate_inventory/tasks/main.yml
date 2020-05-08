@@ -8,7 +8,7 @@
   os_server_info:
   register: os_server_info_response
 
-# Module commented. Uses in case of you want to watch json response file.
+# Module commented. Use in case of you want to watch json response file.
 # - name: Save os_server_info module response into a file
 #   copy:
 #     content: "{{ os_server_info_response }}"
